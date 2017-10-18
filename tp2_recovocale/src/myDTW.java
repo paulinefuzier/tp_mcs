@@ -1,6 +1,7 @@
 import fr.enseeiht.danck.voice_analyzer.DTWHelper;
 import fr.enseeiht.danck.voice_analyzer.Field;
 import fr.enseeiht.danck.voice_analyzer.MFCC;
+import fr.enseeiht.danck.voice_analyzer.MFCCHelper;
 
 public class myDTW extends DTWHelper {
 
@@ -8,8 +9,6 @@ public class myDTW extends DTWHelper {
 	public float DTWDistance(Field unknown, Field known) {
 		// Methode qui calcule le score de la DTW 
 		// entre 2 ensembles de MFCC
-		
-		myMFCCdistance myMfCCDist = new myMFCCdistance();
 		// contrainte locale
 		int w1 = 1;
 		int w2 = 1;
@@ -18,7 +17,6 @@ public class myDTW extends DTWHelper {
 		// taille de la matrice DTW
 		int col = unknown.getLength()+1;
 		int lign = known.getLength()+1;
-		
 		
 		// matrice des resultats 
 		int[][] g = new int[col][lign];
@@ -42,7 +40,8 @@ public class myDTW extends DTWHelper {
 		// matrice des distances entre unknown et known
 		for(int i= 1; i<col;i++){
 			for(int j=1; j<lign;j++){
-				float dist = myMfCCDist.distance(unknown.getMFCC(i-1),known.getMFCC(j-1));
+				float dist = MFCCHelper.getMfccHelper().distance(unknown.getMFCC(i-1),known.getMFCC(j-1));
+				//float dist = myMfCCDist.distance(unknown.getMFCC(i-1),known.getMFCC(j-1));
 				g[i][j] = (int) Math.min(g[i-1][j]+w1*dist,
 						             Math.min(g[i-1][j-1]+w2*dist,
 						            		  g[i][j-1]+w3*dist));

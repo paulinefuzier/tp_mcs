@@ -6,6 +6,11 @@ import java.util.List;
 import fr.enseeiht.danck.voice_analyzer.*;
 import fr.enseeiht.danck.voice_analyzer.defaults.*;
 
+/*
+ * pour convertir un fichier wav en csv
+ * sox monficher.wav monfichier.dat
+ * python convert.py monfichier.dat monfichier.csv
+ */
 public class TestVoiceAnalyzer {
 
 	// Liste des mots cles reconnus
@@ -61,9 +66,11 @@ public class TestVoiceAnalyzer {
 		List<String> files = new ArrayList<>();
         String base = "/test_res/audio/";
         files.add(base + "Alpha.csv");   // DANCK
-        files.add(base + "Bravo.csv");   // FORWARD
+        //files.add(base + "Bravo.csv");   // FORWARD
         files.add(base + "Charlie.csv"); // SEQUENCE
         files.add(base + "Delta.csv");   // SEQUENCE_NAME
+        files.add(base + "F22_arretetoi.csv"); // MA SEQUENCE pour arrete toi
+        files.add(base + "F22_avance.csv"); // Ma sequence pour avance
         
         // Lecture des fichiers sons et construction des fenetres 
         // de sons 
@@ -102,12 +109,19 @@ public class TestVoiceAnalyzer {
         	// Les mots sont analyses les uns après les autres 
         	// Le fichier alpha sera associe au mot cle DANCK
         	voiceAnalyzer.record(Token.valueOf("DANCK"));
+        	// Le fichier F22 arrete toi sera associe au mot cle STANDBY
+        	voiceAnalyzer.record(Token.valueOf("STANDBY"));
         	// Le fichier bravo sera associe au mot cle FORWARD
-        	voiceAnalyzer.record(Token.valueOf("FORWARD"));
+        	//voiceAnalyzer.record(Token.valueOf("FORWARD"));
         	// Le fichier charlie sera associe au mot cle SEQUENCE
         	voiceAnalyzer.record(Token.valueOf("SEQUENCE"));
         	// Le fichier delta sera associe au mot cle SEQUENCE_NAME
         	voiceAnalyzer.record(Token.valueOf("SEQUENCE_NAME"), "Delta");
+        	
+        	
+
+        	//voiceAnalyzer.record(Token.valueOf("FORWARD"));
+        	
         	// Dans la base de donnees les mots cles seront affectes 
         	// l'utilisateur Speaker1
         	voiceAnalyzer.commit("Speaker1");
@@ -125,6 +139,7 @@ public class TestVoiceAnalyzer {
         	// sequence devient alpha charlie delta
         	// Le test entend alpha (DANCK) puis charlie (SEQUENCE)
         	// et enfin delta (SEQUENCE_NAME)
+        	// et maintenant test avec mon fichier audio avec "arrete toi"
         	String order = "Ordre inconnu";
         	try {
         		order = voiceAnalyzer.nextOrder(new HashMap<String, String>()).toString();
